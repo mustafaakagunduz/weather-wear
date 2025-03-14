@@ -49,7 +49,8 @@ export default function Home() {
             </h1>
 
             {errorKey && (
-                <Alert variant="destructive" className="mb-6 border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+
+                <Alert variant="destructive" className="mb-6 border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 flex justify-center">
                     <AlertDescription className="text-red-800 dark:text-red-300">{t(errorKey)}</AlertDescription>
                 </Alert>
             )}

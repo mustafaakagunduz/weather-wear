@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, MapPin, User } from "lucide-react";
 import { useLanguage } from '@/context/language-context';
+import { Separator } from "@/components/ui/separator";
 
 
 interface WeatherFormProps {
@@ -126,14 +127,17 @@ const WeatherForm = ({
 
     return (
         <Card className="mb-6 card-shadow">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
+            <CardHeader className="text-center"> {/* text-center sınıfı eklendi */}
+                <CardTitle className="flex items-center justify-center gap-2 text-blue-700 dark:text-blue-300"> {/* justify-center sınıfı eklendi */}
                     <MapPin className="h-5 w-5 text-primary" />
                     {t('formTitle')}
                 </CardTitle>
                 <CardDescription className="text-blue-600/80 dark:text-gray-300">{t('formDescription')}</CardDescription>
             </CardHeader>
+
             <CardContent className="space-y-6 pt-6">
+
+                <Separator className="my-2" />
                 {/* Redesigned Gender Selection Cards */}
                 <div className="space-y-4">
                     <label
@@ -177,6 +181,8 @@ const WeatherForm = ({
                         </div>
                     </div>
                 </div>
+
+                <Separator className="my-2" />
 
                 <div className="flex items-center space-x-2">
                     <Checkbox

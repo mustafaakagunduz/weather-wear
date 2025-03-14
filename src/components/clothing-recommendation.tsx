@@ -23,14 +23,34 @@ const ClothingRecommendation = ({ recommendation }: ClothingRecommendationProps)
                     {t('recommendationTitle')}
                 </CardTitle>
             </CardHeader>
+
             <CardContent className="p-6">
                 {recommendationParagraphs.length > 0 ? (
                     <div className="space-y-4">
-                        {recommendationParagraphs.map((paragraph, index) => (
-                            <p key={index} className="leading-relaxed text-blue-800 dark:text-gray-100">
-                                {paragraph}
-                            </p>
-                        ))}
+                        {recommendationParagraphs.map((paragraph, index) => {
+                            // Paragraf tireleri içeriyorsa (madde listesi ise) özel işle
+                            if (paragraph.includes('- ')) {
+                                const items = paragraph.split('- ').filter(item => item.trim() !== '');
+                                return (
+                                    <div key={index} className="space-y-2">
+                                        <ul className="list-disc pl-5 space-y-2">
+                                            {items.map((item, itemIndex) => (
+                                                <li key={itemIndex} className="text-blue-800 dark:text-gray-100">
+                                                    {item.trim()}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                );
+                            } else {
+                                // Normal paragraf
+                                return (
+                                    <p key={index} className="leading-relaxed text-blue-800 dark:text-gray-100">
+                                        {paragraph}
+                                    </p>
+                                );
+                            }
+                        })}
                     </div>
                 ) : (
                     <p className="whitespace-pre-line leading-relaxed text-blue-800 dark:text-gray-100">{recommendation}</p>
