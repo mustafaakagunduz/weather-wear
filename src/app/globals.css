@@ -1,26 +1,145 @@
-@import "tailwindcss";
+/* app/globals.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Açık tema için açık mavi tonları - daha fazla mavi renk eklendi */
+    --background: 210 50% 96%; /* Açık mavi arka plan */
+    --foreground: 222.2 84% 15%;
+
+    --card: 210 50% 98%; /* Kartlar için çok hafif mavi ton */
+    --card-foreground: 222.2 84% 15%;
+
+    --popover: 210 50% 98%;
+    --popover-foreground: 222.2 84% 15%;
+
+    --primary: 221.2 83.2% 53.3%; /* Canlı mavi buton rengi */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 93%; /* Daha açık mavi için secondary */
+    --secondary-foreground: 222.2 57.4% 20.2%;
+
+    --muted: 210 40% 93%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 93%;
+    --accent-foreground: 222.2 57.4% 20.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 31.8% 87%; /* Daha açık mavi border */
+    --input: 210 31.8% 87%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --radius: 0.75rem; /* Daha yuvarlak köşeler */
+  }
+
+  .dark {
+    /* Koyu tema için lacivert tonları - Kontrastı artırıyoruz */
+    --background: 222 47% 11%; /* Lacivert arka plan */
+    --foreground: 210 40% 98%; /* Daha beyaz yazı rengi */
+
+    --card: 222 47% 14%; /* Biraz daha açık kart arka planı */
+    --card-foreground: 210 40% 98%; /* Daha beyaz yazı rengi */
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 65%; /* Daha parlak mavi */
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 30%; /* Daha açık secondary */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 30%; /* Daha açık muted */
+    --muted-foreground: 210 40% 90%; /* Daha iyi okunabilirlik */
+
+    --accent: 217.2 32.6% 35%; /* Daha açık accent */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 72.8% 60.6%; /* Daha parlak destructive */
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 40%; /* Daha belirgin sınırlar */
+    --input: 217.2 32.6% 40%;
+    --ring: 224.3 76.3% 65%; /* Daha parlak odak halkası */
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background)); /* Arka plan rengini uyguluyor */
+  color: hsl(var(--foreground)); /* Yazı rengini uyguluyor */
+  transition: background-color 0.3s, color 0.3s; /* Geçiş efektlerini manuel ekliyorsun */
+}
+
+/* Kart animasyonları ve geçişleri */
+.card-shadow {
+  @apply bg-card border border-blue-100 dark:border-gray-700 rounded-lg transition-all duration-300;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05);
+}
+
+.dark .card-shadow {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+.card-shadow:hover {
+  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.1);
+}
+
+.dark .card-shadow:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Güzel geçişler */
+.smooth-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Dark mode için özel yazı iyileştirmeleri */
+.dark input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dark .text-muted-foreground {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Form elementleri için mavi tonlar */
+input, select, textarea {
+  @apply bg-blue-50 border-blue-100;
+}
+
+/* Dark mode için form elementleri iyileştirmeleri */
+.dark select,
+.dark input,
+.dark button {
+  @apply border-gray-700 bg-gray-800;
+}
+
+/* Ikon renkleri */
+.text-primary svg {
+  @apply text-blue-500;
+}
+
+/* Dark mode için ikon renkleri */
+.dark .text-primary svg {
+  @apply text-blue-400;
+}
+
+/* Mavi renkli dış çerçeve */
+.app-content {
+  @apply border-blue-100 bg-blue-50/50;
+}
+
+/* Widget arkaplanları için mavi ton */
+.widget-bg {
+  @apply bg-blue-50;
+}
+
+.dark .widget-bg {
+  @apply bg-card;
 }
