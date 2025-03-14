@@ -87,8 +87,8 @@ export const translations: Translations = {
         en: "Clothing Recommendation"
     },
     locationError: {
-        tr: "Konum bilgisi alınamadı. Lütfen manuel olarak giriş yapın.",
-        en: "Could not get location. Please enter manually."
+        tr: "Konum bilgisi alınamadı. Lütfen manuel olarak giriş yapınız veya tarayıcınıza konum erişim izni sağlayınız.",
+        en: "Could not get location. Please enter manually or provide location access permission to your browser."
     },
     browserLocationError: {
         tr: "Tarayıcınız konum servislerini desteklemiyor. Lütfen manuel olarak giriş yapın.",
