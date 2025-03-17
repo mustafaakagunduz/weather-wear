@@ -6,7 +6,6 @@ import WeatherDisplay from '@/components/weather-display';
 import ClothingRecommendation from '@/components/clothing-recommendation';
 import LanguageToggle from '@/components/language-toggle';
 import ThemeToggle from '@/components/theme-toggle';
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLanguage } from '@/context/language-context';
 import { useTheme } from '@/context/theme-context';
 
@@ -48,14 +47,7 @@ export default function Home() {
                 {t('pageTitle')}
             </h1>
 
-            {errorKey && (
-
-                <Alert variant="destructive" className="mb-6 border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 flex justify-center">
-                    <AlertDescription className="text-red-800 dark:text-red-300">{t(errorKey)}</AlertDescription>
-                </Alert>
-            )}
-
-
+            {/* Hata mesajlarını artık WeatherForm içinde gösteriyoruz */}
 
             {weatherData && (
                 <WeatherDisplay
@@ -70,6 +62,7 @@ export default function Home() {
                 setRecommendation={setRecommendation}
                 loading={loading}
                 weatherData={weatherData}
+                errorKey={errorKey} // errorKey'i props olarak gönderiyoruz
             />
 
             {recommendation && (
