@@ -67,7 +67,7 @@ const WeatherDisplay = ({ weatherData }: WeatherDisplayProps) => {
     };
 
     return (
-        <Card className="mb-6 overflow-hidden card-shadow">
+        <Card className="mb-6 overflow-hidden card-shadow mx-auto max-w-2xl">
             <CardHeader>
                 <CardTitle className="flex items-center justify-between text-blue-700 dark:text-blue-300">
                     <span className="flex items-center">

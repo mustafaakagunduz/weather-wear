@@ -23,8 +23,8 @@ export const translations: Translations = {
         en: "Location and Personal Information"
     },
     formDescription: {
-        tr: "Giyim önerisi alabilmek için aşağıdaki bilgileri doldurun",
-        en: "Fill in the information below to get clothing recommendations"
+        tr: "Giyim önerisi alabilmek için lütfen aşağıdaki bilgileri doldurun",
+        en: "Please fill in the information below to get clothing recommendations"
     },
     manualLocation: {
         tr: "Manuel konum girişi",

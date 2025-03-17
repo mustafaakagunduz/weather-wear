@@ -20,7 +20,7 @@ interface WeatherFormProps {
     setRecommendation: React.Dispatch<React.SetStateAction<string | null>>;
     loading: boolean;
     weatherData: any;
-    errorKey: string | null; // Hata anahtarını props olarak alıyoruz
+    errorKey: string | null;
 }
 
 const WeatherForm = ({
@@ -37,36 +37,28 @@ const WeatherForm = ({
     const [city, setCity] = useState<string>('');
     const [useManualLocation, setUseManualLocation] = useState<boolean>(false);
     const { language, t } = useLanguage();
-
-    // Konum paylaşım izni kontrolü ve konum bilgisi alma
     const [locationRequested, setLocationRequested] = useState<boolean>(false);
 
     const requestLocationPermission = async () => {
         try {
-            // Konum izin durumunu kontrol et
             if (navigator.permissions && navigator.permissions.query) {
                 const result = await navigator.permissions.query({ name: 'geolocation' });
 
                 if (result.state === 'granted') {
-                    // İzin zaten var, konum bilgisini al
                     getLocationData();
                 } else if (result.state === 'prompt') {
-                    // Kullanıcıya izin sor
                     setLocationRequested(true);
                     getLocationData();
                 } else {
-                    // İzin reddedilmiş
                     setErrorKey('locationError');
                     setLoading(false);
                     setUseManualLocation(true);
                 }
             } else {
-                // Permissions API desteklenmiyor, doğrudan konum isteği yap
                 getLocationData();
             }
         } catch (error) {
             console.error('Permission check error:', error);
-            // Hata durumunda doğrudan konum isteği yap
             getLocationData();
         }
     };
@@ -83,28 +75,24 @@ const WeatherForm = ({
                     setLoading(false);
                 },
                 (error) => {
-                    // Kullanıcı izin vermedi veya bir hata oluştu
                     setErrorKey('locationError');
                     setLoading(false);
                     setUseManualLocation(true);
                 }
             );
         } else {
-            // Tarayıcı geolocation desteklemiyor
             setErrorKey('browserLocationError');
             setLoading(false);
             setUseManualLocation(true);
         }
     };
 
-    // Sayfa yüklendiğinde konum izni isteme
     useEffect(() => {
         if (!useManualLocation && !locationRequested) {
             requestLocationPermission();
         }
     }, [useManualLocation, locationRequested]);
 
-    // Tarayıcı konumu ile hava durumu verilerini al
     useEffect(() => {
         const fetchWeatherDataByLocation = async () => {
             if (location && !useManualLocation) {
@@ -126,7 +114,6 @@ const WeatherForm = ({
         fetchWeatherDataByLocation();
     }, [location, useManualLocation, setWeatherData, setLoading, setErrorKey, language]);
 
-    // Şehir adıyla hava durumu verilerini al (form submit edildiğinde)
     const fetchWeatherDataByCity = async (e?: FormEvent) => {
         if (e) e.preventDefault();
 
@@ -143,8 +130,6 @@ const WeatherForm = ({
             const response = await axios.get(url);
             setWeatherData(response.data);
             setLoading(false);
-
-            // Hava durumu verisi başarıyla alındığında hata durumunu sıfırla
             setErrorKey(null);
         } catch (error) {
             setErrorKey('weatherError');
@@ -152,7 +137,6 @@ const WeatherForm = ({
         }
     };
 
-    // ChatGPT'den giyim önerisi al - Sunucu taraflı API kullanarak
     const getClothingRecommendation = async () => {
         if (!weatherData || !gender) {
             setErrorKey('validationError');
@@ -161,8 +145,6 @@ const WeatherForm = ({
 
         try {
             setLoading(true);
-
-            // Kendi API ara katmanımızı kullanıyoruz
             const response = await axios.post('/api/recommendation', {
                 weatherData,
                 gender,
@@ -184,30 +166,33 @@ const WeatherForm = ({
     };
 
     return (
-        <Card className="mb-6 card-shadow">
-            <CardHeader className="text-center">
+        <Card className="mb-4 card-shadow mx-auto max-w-2xl">
+            <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-center gap-2 text-blue-700 dark:text-blue-300">
                     <MapPin className="h-5 w-5 text-primary" />
                     {t('formTitle')}
                 </CardTitle>
-                <CardDescription className="text-blue-600/80 dark:text-gray-300">{t('formDescription')}</CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-4 pt-4">
 
+
+            <div className="flex justify-center px-4 pt-2 pb-1">
+                <CardDescription className="text-blue-600/80 dark:text-gray-300">{t('formDescription')}</CardDescription>
+            </div>
+
+
+
+            <CardContent className="space-y-3 pt-3">
                 <Separator className="my-2" />
-                {/* Redesigned Gender Selection Cards */}
-                <div className="space-y-4">
-                    <label
-                        className="block text-sm font-medium text-center text-blue-700 dark:text-gray-200 flex items-center justify-center gap-1"
-                    >
+                <div className="space-y-2">
+                    <label className="block text-sm font-medium text-center text-blue-700 dark:text-gray-200 flex items-center justify-center gap-1">
                         <User className="h-4 w-4 text-primary"/>
                         {t('genderLabel')}
                     </label>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                         <div
-                            className={`cursor-pointer p-4 rounded-lg border text-center transition-all ${
+                            className={`cursor-pointer p-3 rounded-lg border text-center transition-all ${
                                 gender === 'male'
                                     ? 'bg-blue-100 border-blue-500 dark:bg-blue-900/30 dark:border-blue-400'
                                     : 'bg-white border-blue-200 hover:border-blue-300 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-gray-600'
@@ -215,14 +200,14 @@ const WeatherForm = ({
                             onClick={() => setGender('male')}
                         >
                             <div className="flex flex-col items-center justify-center">
-                                <span className="mt-2 text-blue-700 dark:text-gray-100">
+                                <span className="text-blue-700 dark:text-gray-100">
                                     {t('male')}
                                 </span>
                             </div>
                         </div>
 
                         <div
-                            className={`cursor-pointer p-4 rounded-lg border text-center transition-all ${
+                            className={`cursor-pointer p-3 rounded-lg border text-center transition-all ${
                                 gender === 'female'
                                     ? 'bg-blue-100 border-blue-500 dark:bg-blue-900/30 dark:border-blue-400'
                                     : 'bg-white border-blue-200 hover:border-blue-300 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-gray-600'
@@ -230,7 +215,7 @@ const WeatherForm = ({
                             onClick={() => setGender('female')}
                         >
                             <div className="flex flex-col items-center justify-center">
-                                <span className="mt-2 text-blue-700 dark:text-gray-100">
+                                <span className="text-blue-700 dark:text-gray-100">
                                     {t('female')}
                                 </span>
                             </div>
@@ -240,9 +225,8 @@ const WeatherForm = ({
 
                 <Separator className="my-2" />
 
-                {/* Konum hata mesajı - İstenen yerde gösteriyoruz */}
                 {(errorKey === 'locationError' || errorKey === 'browserLocationError') && (
-                    <Alert variant="destructive" className="mb-2 border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 flex justify-center">
+                    <Alert variant="destructive" className="border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 flex justify-center">
                         <AlertDescription className="text-red-800 dark:text-red-300 text-center w-full">{t(errorKey)}</AlertDescription>
                     </Alert>
                 )}
@@ -261,7 +245,7 @@ const WeatherForm = ({
                 </div>
 
                 {useManualLocation && (
-                    <form onSubmit={fetchWeatherDataByCity} className="space-y-4 smooth-transition">
+                    <form onSubmit={fetchWeatherDataByCity} className="space-y-3 smooth-transition">
                         <div className="space-y-2">
                             <label htmlFor="city"
                                    className="text-sm font-medium flex items-center gap-1 text-blue-700 dark:text-gray-200">
@@ -296,14 +280,14 @@ const WeatherForm = ({
                     </form>
                 )}
 
-                {/* Diğer hata mesajları burada gösteriliyor */}
                 {errorKey && errorKey !== 'locationError' && errorKey !== 'browserLocationError' && (
-                    <Alert variant="destructive" className="mt-4 border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 flex justify-center">
+                    <Alert variant="destructive" className="border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 flex justify-center">
                         <AlertDescription className="text-red-800 dark:text-red-300 text-center w-full">{t(errorKey)}</AlertDescription>
                     </Alert>
                 )}
             </CardContent>
-            <CardFooter>
+
+            <CardFooter className="pt-1 pb-4">
                 <Button
                     className="w-full smooth-transition bg-blue-600 hover:bg-blue-700 dark:bg-primary/90 dark:text-white dark:hover:bg-primary"
                     onClick={getClothingRecommendation}
