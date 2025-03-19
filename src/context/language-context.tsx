@@ -31,8 +31,8 @@ export const translations: Translations = {
         en: "Manual location input"
     },
     cityLabel: {
-        tr: "Şehir Adı:",
-        en: "City Name:"
+        tr: "Şehir : ",
+        en: "City : "
     },
     cityPlaceholder: {
         tr: "Örn: Istanbul",
