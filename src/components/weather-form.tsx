@@ -4,14 +4,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, MapPin, User, Search } from "lucide-react";
+import { Loader2, MapPin, User } from "lucide-react";
 import { useLanguage } from '@/context/language-context';
 import { Separator } from "@/components/ui/separator";
-import { FormEvent } from 'react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import SimpleCityAutocomplete from './simple-city-autocomplete';
 
 interface WeatherFormProps {
     setWeatherData: React.Dispatch<React.SetStateAction<any>>;
@@ -114,10 +113,8 @@ const WeatherForm = ({
         fetchWeatherDataByLocation();
     }, [location, useManualLocation, setWeatherData, setLoading, setErrorKey, language]);
 
-    const fetchWeatherDataByCity = async (e?: FormEvent) => {
-        if (e) e.preventDefault();
-
-        if (!city.trim()) {
+    const fetchWeatherDataByCity = async (cityQuery = city) => {
+        if (!cityQuery.trim()) {
             setErrorKey('emptyCityError');
             return;
         }
@@ -125,7 +122,7 @@ const WeatherForm = ({
         try {
             setLoading(true);
             const weatherApiKey = process.env.NEXT_PUBLIC_WEATHER_API_KEY;
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherApiKey}&units=metric&lang=${language}`;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityQuery}&appid=${weatherApiKey}&units=metric&lang=${language}`;
 
             const response = await axios.get(url);
             setWeatherData(response.data);
@@ -136,6 +133,13 @@ const WeatherForm = ({
             setLoading(false);
         }
     };
+
+    // Şehir seçildiğinde otomatik olarak hava durumu verilerini çekmek için
+    useEffect(() => {
+        if (city && city.trim() !== '') {
+            fetchWeatherDataByCity();
+        }
+    }, [city]);
 
     const getClothingRecommendation = async () => {
         if (!weatherData || !gender) {
@@ -174,13 +178,9 @@ const WeatherForm = ({
                 </CardTitle>
             </CardHeader>
 
-
-
             <div className="flex justify-center px-4 pt-2 pb-1">
                 <CardDescription className="text-blue-600/80 dark:text-gray-300">{t('formDescription')}</CardDescription>
             </div>
-
-
 
             <CardContent className="space-y-3 pt-3">
                 <Separator className="my-2" />
@@ -245,39 +245,17 @@ const WeatherForm = ({
                 </div>
 
                 {useManualLocation && (
-                    <form onSubmit={fetchWeatherDataByCity} className="space-y-3 smooth-transition">
-                        <div className="space-y-2">
-                            <label htmlFor="city"
-                                   className="text-sm font-medium flex items-center gap-1 text-blue-700 dark:text-gray-200">
-                                <MapPin className="h-4 w-4 text-primary"/>
-                                {t('cityLabel')}
-                            </label>
-                            <div className="flex gap-2">
-                                <Input
-                                    id="city"
-                                    type="text"
-                                    value={city}
-                                    onChange={(e) => setCity(e.target.value)}
-                                    placeholder={t('cityPlaceholder')}
-                                    className="smooth-transition bg-white border-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-                                />
-                                <Button
-                                    type="submit"
-                                    disabled={loading || !city.trim()}
-                                    className="bg-blue-600 hover:bg-blue-700 dark:bg-primary/90 dark:text-white dark:hover:bg-primary"
-                                >
-                                    {loading ? (
-                                        <Loader2 className="h-4 w-4 animate-spin"/>
-                                    ) : (
-                                        <>
-                                            <Search className="h-4 w-4 mr-2" />
-                                            {language === 'tr' ? 'Şehir Bul' : 'Find City'}
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                        </div>
-                    </form>
+                    <div className="space-y-2">
+                        <label htmlFor="city"
+                               className="text-sm font-medium flex items-center gap-1 text-blue-700 dark:text-gray-200">
+                            <MapPin className="h-4 w-4 text-primary"/>
+                            {t('cityLabel')}
+                        </label>
+                        <SimpleCityAutocomplete
+                            setSelectedCity={setCity}
+                            placeholder={t('cityPlaceholder')}
+                        />
+                    </div>
                 )}
 
                 {errorKey && errorKey !== 'locationError' && errorKey !== 'browserLocationError' && (
