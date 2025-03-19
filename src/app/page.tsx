@@ -37,7 +37,7 @@ export default function Home() {
     const { theme } = useTheme();
 
     return (
-        <main className="container mx-auto px-4 py-12 max-w-3xl min-h-screen bg-blue-50/30 dark:bg-gray-900/20">
+        <main className="container mx-auto px-4 py-12 min-h-screen bg-blue-50/30 dark:bg-gray-900/20">
             <div className="flex justify-end gap-2 fixed top-4 right-4 z-50">
                 <ThemeToggle />
                 <LanguageToggle />
@@ -47,29 +47,37 @@ export default function Home() {
                 {t('pageTitle')}
             </h1>
 
-            {/* Hata mesajlarını artık WeatherForm içinde gösteriyoruz */}
+            {/* İki kart yan yana dursun diye flex container ekliyoruz */}
+            <div className="max-w-5xl mx-auto">
+                <div className={`flex flex-col lg:flex-row gap-6 mb-6 ${!weatherData ? 'justify-center' : ''}`}>
+                    {/* WeatherForm her zaman gösterilir ve solda yer alır */}
+                    <div className={`w-full ${weatherData ? 'lg:w-1/2' : 'max-w-2xl mx-auto'}`}>
+                        <WeatherForm
+                            setWeatherData={setWeatherData}
+                            setLoading={setLoading}
+                            setErrorKey={setErrorKey}
+                            setRecommendation={setRecommendation}
+                            loading={loading}
+                            weatherData={weatherData}
+                            errorKey={errorKey}
+                        />
+                    </div>
 
-            {weatherData && (
-                <WeatherDisplay
-                    weatherData={weatherData}
-                />
-            )}
+                    {/* WeatherDisplay varsa göster, sağda yer alır */}
+                    {weatherData ? (
+                        <div className="w-full lg:w-1/2 flex items-stretch">
+                            <WeatherDisplay weatherData={weatherData} />
+                        </div>
+                    ) : null}
+                </div>
 
-            <WeatherForm
-                setWeatherData={setWeatherData}
-                setLoading={setLoading}
-                setErrorKey={setErrorKey}
-                setRecommendation={setRecommendation}
-                loading={loading}
-                weatherData={weatherData}
-                errorKey={errorKey} // errorKey'i props olarak gönderiyoruz
-            />
-
-            {recommendation && (
-                <ClothingRecommendation
-                    recommendation={recommendation}
-                />
-            )}
+                {/* ClothingRecommendation alt kısımda ve tam genişlikte */}
+                {recommendation && (
+                    <div className="max-w-5xl mx-auto">
+                        <ClothingRecommendation recommendation={recommendation} />
+                    </div>
+                )}
+            </div>
         </main>
     );
 }

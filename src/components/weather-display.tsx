@@ -67,8 +67,8 @@ const WeatherDisplay = ({ weatherData }: WeatherDisplayProps) => {
     };
 
     return (
-        <Card className="mb-6 overflow-hidden card-shadow mx-auto max-w-2xl">
-            <CardHeader>
+        <Card className="w-full h-full flex flex-col overflow-hidden card-shadow">
+            <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-between text-blue-700 dark:text-blue-300">
                     <span className="flex items-center">
                         <WeatherIcon />
@@ -81,8 +81,8 @@ const WeatherDisplay = ({ weatherData }: WeatherDisplayProps) => {
                     />
                 </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-                <div className="grid grid-cols-2 gap-6">
+            <CardContent className="p-4 flex-grow flex flex-col">
+                <div className="grid grid-cols-2 gap-4 md:gap-6 flex-grow">
                     <div className="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-blue-100 dark:border-gray-700 smooth-transition">
                         <Thermometer className="mr-3 h-6 w-6 text-primary dark:text-blue-300" />
                         <div>
@@ -112,6 +112,7 @@ const WeatherDisplay = ({ weatherData }: WeatherDisplayProps) => {
                         </div>
                     </div>
                 </div>
+                <div className="flex-grow py-3"></div>
             </CardContent>
         </Card>
     );

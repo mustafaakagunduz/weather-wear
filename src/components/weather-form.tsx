@@ -170,19 +170,19 @@ const WeatherForm = ({
     };
 
     return (
-        <Card className="mb-4 card-shadow mx-auto max-w-2xl">
+        <Card className="w-full h-full flex flex-col overflow-hidden card-shadow">
             <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-center gap-2 text-blue-700 dark:text-blue-300">
                     <MapPin className="h-5 w-5 text-primary" />
                     {t('formTitle')}
                 </CardTitle>
+
+                <CardDescription className="text-blue-600/80 dark:text-gray-300 text-center mt-2">
+                    {t('formDescription')}
+                </CardDescription>
             </CardHeader>
 
-            <div className="flex justify-center px-4 pt-2 pb-1">
-                <CardDescription className="text-blue-600/80 dark:text-gray-300">{t('formDescription')}</CardDescription>
-            </div>
-
-            <CardContent className="space-y-3 pt-3">
+            <CardContent className="flex-grow flex flex-col space-y-3 p-4">
                 <Separator className="my-2" />
                 <div className="space-y-2">
                     <label className="block text-sm font-medium text-center text-blue-700 dark:text-gray-200 flex items-center justify-center gap-1">
@@ -263,9 +263,11 @@ const WeatherForm = ({
                         <AlertDescription className="text-red-800 dark:text-red-300 text-center w-full">{t(errorKey)}</AlertDescription>
                     </Alert>
                 )}
+
+                <div className="flex-grow"></div>
             </CardContent>
 
-            <CardFooter className="pt-1 pb-4">
+            <CardFooter className="p-4 pt-2">
                 <Button
                     className="w-full smooth-transition bg-blue-600 hover:bg-blue-700 dark:bg-primary/90 dark:text-white dark:hover:bg-primary"
                     onClick={getClothingRecommendation}

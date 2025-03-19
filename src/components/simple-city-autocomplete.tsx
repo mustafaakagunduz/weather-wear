@@ -30,6 +30,7 @@ const SimpleCityAutocomplete = ({
     const [cities, setCities] = useState<City[]>([]);
     const [loading, setLoading] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [citySelected, setCitySelected] = useState(false); // Şehir seçildi mi?
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -41,6 +42,8 @@ const SimpleCityAutocomplete = ({
             setCities([]);
             return;
         }
+
+        if (citySelected) return; // Eğer şehir seçildiyse arama yapma
 
         setLoading(true);
         try {
@@ -90,7 +93,7 @@ const SimpleCityAutocomplete = ({
             });
 
             setCities(uniqueCities);
-            setShowDropdown(uniqueCities.length > 0);
+            setShowDropdown(uniqueCities.length > 0 && !citySelected);
         } catch (error) {
             console.error('Error fetching cities:', error);
             setCities([]);
@@ -120,22 +123,42 @@ const SimpleCityAutocomplete = ({
             clearTimeout(debounceRef.current);
         }
 
-        debounceRef.current = setTimeout(() => {
-            searchCities(inputValue);
-        }, 300);
+        if (!citySelected) {
+            debounceRef.current = setTimeout(() => {
+                searchCities(inputValue);
+            }, 300);
+        }
 
         return () => {
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
         };
-    }, [inputValue]);
+    }, [inputValue, citySelected]);
 
     const handleSelect = (city: City) => {
         setInputValue(city.fullName);
         // Hava durumu API çağrısı için şehir,ülke formatında gönder
         setSelectedCity(`${city.name},${city.country}`);
         setShowDropdown(false);
+        setCitySelected(true); // Şehir seçildiğini işaretle
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setInputValue(newValue);
+
+        // Kullanıcı inputu değiştiriyorsa, şehir seçimi iptal edilmiş demektir
+        if (citySelected) {
+            setCitySelected(false);
+        }
+
+        // Uzunluk kontrolü ve dropdown gösterimi
+        if (newValue.length > 1 && !citySelected) {
+            setShowDropdown(true);
+        } else {
+            setShowDropdown(false);
+        }
     };
 
     // Ülke kodunu bayrak emoji'sine çeviren yardımcı fonksiyon
@@ -153,20 +176,18 @@ const SimpleCityAutocomplete = ({
             <Input
                 ref={inputRef}
                 value={inputValue}
-                onChange={(e) => {
-                    setInputValue(e.target.value);
-                    if (e.target.value.length > 1) {
+                onChange={handleInputChange}
+                onFocus={() => {
+                    // Eğer şehir seçilmediyse ve input değeri yeterince uzunsa dropdown'ı göster
+                    if (!citySelected && inputValue.length > 1 && cities.length > 0) {
                         setShowDropdown(true);
-                    } else {
-                        setShowDropdown(false);
                     }
                 }}
-                onFocus={() => inputValue.length > 1 && cities.length > 0 && setShowDropdown(true)}
                 placeholder={placeholder || (language === 'tr' ? 'Şehir ara...' : 'Search city...')}
                 className="w-full smooth-transition bg-white border-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
             />
 
-            {showDropdown && (
+            {showDropdown && !citySelected && (
                 <div
                     ref={dropdownRef}
                     className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
