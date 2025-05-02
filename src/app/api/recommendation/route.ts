@@ -111,7 +111,7 @@ export async function POST(request: Request) {
             ],
             model: "gpt-4o-mini",
             // İlgili parametreler eklenebilir
-            max_tokens: 500, // Yanıt uzunluğunu sınırla
+            max_tokens: 500, // Yanıt uzunluğunu sınırlaa
             temperature: 0.7, // Daha tutarlı yanıtlar için
         });
 
